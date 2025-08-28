@@ -15,7 +15,12 @@ const FileUploader = ({ onFileChange }: FileUploaderProps) => {
     },
     [onFileChange]
   );
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: { "application/pdf": [".pdf"] },
+    multiple: false,
+    maxSize: 15 * 1024 * 1024,
+  });
 
   return (
     <div className="w-full gradient-border">
@@ -45,7 +50,7 @@ const FileUploader = ({ onFileChange }: FileUploaderProps) => {
             </div>
           ) : (
             <div>
-              <div className="mx-auto w-16 h-16 flex items-center justify-center">
+              <div className="mx-auto w-16 h-16 flex items-center justify-center mb-4">
                 <img src="/icons/info.svg" alt="Upload" className="size-20" />
               </div>
               <div>

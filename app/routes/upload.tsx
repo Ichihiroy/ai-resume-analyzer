@@ -1,7 +1,7 @@
-import { C } from "node_modules/react-router/dist/development/index-react-server-client-DRhjXpk2.mjs";
 import { useState, type FormEvent } from "react";
 import FileUploader from "~/components/FileUploader";
 import Navbar from "~/components/Navbar";
+import { usePuterStore } from "~/lib/puter";
 
 export function meta() {
   return [
@@ -14,9 +14,10 @@ export function meta() {
 }
 
 const Upload = () => {
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(true);
   const [statusText, setStatusText] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const { kv, ai, fs } = usePuterStore();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -24,13 +25,24 @@ const Upload = () => {
     if (!form || !file) return;
 
     const formData = new FormData(form);
-    const companyName = formData.get("company-name");
-    const jobTitle = formData.get("job-title");
-    const jobDescription = formData.get("job-description");
+    const companyName = formData.get("company-name") as string;
+    const jobTitle = formData.get("job-title") as string;
+    const jobDescription = formData.get("job-description") as string;
   };
 
   const handleFileChange = (file: File | null) => {
     setFile(file);
+  };
+
+  const handleAnalyze = (
+    companyName: string,
+    jobTitle: string,
+    jobDescription: string
+  ) => {
+    setIsProcessing(true);
+    setStatusText("Analyzing your resume...");
+
+    // const uploadedFile = fs.uploadFile(file!);
   };
 
   return (
@@ -47,7 +59,7 @@ const Upload = () => {
               <img
                 src="/images/resume-scan.gif"
                 alt="Processing"
-                className="w-full"
+                className="size-100"
               />
             </>
           ) : (
