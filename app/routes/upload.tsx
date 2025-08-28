@@ -1,14 +1,36 @@
+import { C } from "node_modules/react-router/dist/development/index-react-server-client-DRhjXpk2.mjs";
 import { useState, type FormEvent } from "react";
+import FileUploader from "~/components/FileUploader";
 import Navbar from "~/components/Navbar";
+
+export function meta() {
+  return [
+    { title: "Resumind | Upload your resume" },
+    {
+      name: "description",
+      content: "Upload your resume for analysis and improvement suggestions.",
+    },
+  ];
+}
 
 const Upload = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [statusText, setStatusText] = useState("");
+  const [file, setFile] = useState<File | null>(null);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsProcessing(true);
-    setStatusText("Processing your resume...");
+    const form = e.currentTarget.closest("form");
+    if (!form || !file) return;
+
+    const formData = new FormData(form);
+    const companyName = formData.get("company-name");
+    const jobTitle = formData.get("job-title");
+    const jobDescription = formData.get("job-description");
+  };
+
+  const handleFileChange = (file: File | null) => {
+    setFile(file);
   };
 
   return (
@@ -73,7 +95,7 @@ const Upload = () => {
               </div>
               <div className="form-div">
                 <label htmlFor="uploader">Upload Resume</label>
-                <div>Uploader</div>
+                <FileUploader onFileChange={handleFileChange} />
               </div>
               <button className="primary-button py-4" type="submit">
                 Save & Analyze Resume
