@@ -1,3 +1,4 @@
+import { ChevronLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import ATS from "~/components/ATS";
@@ -64,14 +65,14 @@ const Resume = () => {
     <main className="!pt-0">
       <nav className="resume-nav">
         <Link to={`/`} className="back-button">
-          <img src="/icons/back.svg" alt="Go Back" className="w-3 h-3" />
-          <span className="font-semibold text-gray-800 text-sm">
+          <ChevronLeft size={18} />
+          <span className="font-semibold text-gray-200 text-sm">
             Back to Homepage
           </span>
         </Link>
       </nav>
       <div className="flex flex-row max-lg:flex-col-reverse w-full">
-        <section className="feedback-section bg-[url('/images/bg-small.svg')] bg-cover h-[100vh] sticky top-0 items-center justify-around">
+        <section className="feedback-section bg-[url('/images/bg-dark-side.svg')] bg-cover h-[100vh] sticky top-0 items-center justify-around">
           {imageUrl && resumeUrl && (
             <div className="animate-fade-in duration-1000 gradient-border max-sm:m-0 h-[90%] max-wxl:h-fit w-fit">
               <a href={resumeUrl} target="_blank" rel="noopener noreferrer">
@@ -85,7 +86,7 @@ const Resume = () => {
           )}
         </section>
         <section className="feedback-section">
-          <h2 className="text-4xl !text-black font-bold">Resume review</h2>
+          <h2 className="text-4xl font-bold">Resume review</h2>
           {feedback ? (
             <div className="fade-in animate-in duration-1000 flex flex-col gap-8">
               <Summary feedback={feedback} />

@@ -28,8 +28,7 @@ const ScoreBadge = ({ score }: { score: number }) => {
             : score > 39
               ? "text-badge-yellow-text"
               : "text-badge-red-text"
-        }
-              `}
+        }`}
       >
         {score}/100
       </p>
@@ -46,7 +45,7 @@ const CategoryHeader = ({
 }) => {
   return (
     <div className="flex flex-row gap-4 items-center py-2">
-      <p className="text-2xl font-semibold">{title}</p>
+      <p className="text-2xl font-semibold text-white">{title}</p>
       <ScoreBadge score={categoryScore} />
     </div>
   );
@@ -59,28 +58,31 @@ const CategoryContent = ({
 }) => {
   return (
     <div className="flex flex-col gap-4 items-center w-full">
-      <div className="bg-gray-50 w-full rounded-lg px-5 py-4 grid grid-cols-2 gap-4">
+      {/* Tips Summary Grid */}
+      <div className="bg-slate-800 w-full rounded-lg px-5 py-4 grid grid-cols-2 gap-4">
         {tips.map((tip, index) => (
           <div className="flex flex-row gap-2 items-center" key={index}>
             <img
               src={
                 tip.type === "good" ? "/icons/check.svg" : "/icons/warning.svg"
               }
-              alt="score"
+              alt="tip"
               className="size-5"
             />
-            <p className="text-xl text-gray-500 ">{tip.tip}</p>
+            <p className="text-lg text-gray-300">{tip.tip}</p>
           </div>
         ))}
       </div>
+
+      {/* Tips with Explanation */}
       <div className="flex flex-col gap-4 w-full">
         {tips.map((tip, index) => (
           <div
             key={index + tip.tip}
-            className={`flex flex-col gap-2 rounded-2xl p-4 ${
+            className={`flex flex-col gap-2 rounded-2xl p-4 border ${
               tip.type === "good"
-                ? "bg-green-50 border border-green-200 text-green-700"
-                : "bg-yellow-50 border border-yellow-200 text-yellow-700"
+                ? "bg-emerald-900 border-emerald-700 text-emerald-300"
+                : "bg-yellow-900 border-yellow-700 text-yellow-300"
             }`}
           >
             <div className="flex flex-row gap-2 items-center">
@@ -118,6 +120,7 @@ const Details = ({ feedback }: { feedback: Feedback }) => {
             <CategoryContent tips={feedback.toneAndStyle.tips} />
           </AccordionContent>
         </AccordionItem>
+
         <AccordionItem id="content">
           <AccordionHeader itemId="content">
             <CategoryHeader
@@ -129,6 +132,7 @@ const Details = ({ feedback }: { feedback: Feedback }) => {
             <CategoryContent tips={feedback.content.tips} />
           </AccordionContent>
         </AccordionItem>
+
         <AccordionItem id="structure">
           <AccordionHeader itemId="structure">
             <CategoryHeader
@@ -140,6 +144,7 @@ const Details = ({ feedback }: { feedback: Feedback }) => {
             <CategoryContent tips={feedback.structure.tips} />
           </AccordionContent>
         </AccordionItem>
+
         <AccordionItem id="skills">
           <AccordionHeader itemId="skills">
             <CategoryHeader

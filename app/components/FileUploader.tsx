@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { X } from "lucide-react";
 
 interface FileUploaderProps {
   onFileChange: (file: File | null) => void;
@@ -34,10 +35,10 @@ const FileUploader = ({ onFileChange }: FileUploaderProps) => {
             >
               <img src="/images/pdf.png" alt="PDF icon" className="size-10" />
               <div>
-                <p className="text-lg text-gray-700 font-medium truncate">
+                <p className="text-lg text-gray-200 font-medium truncate">
                   {file.name}
                 </p>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-300">
                   {Math.round(file.size / 1024)} KB
                 </p>
               </div>
@@ -45,7 +46,8 @@ const FileUploader = ({ onFileChange }: FileUploaderProps) => {
                 className="p-2 cursor-pointer"
                 onClick={() => setFile(null)}
               >
-                <img src="/icons/cross.svg" alt="Delete" className="size-5 " />
+                {/* <img src="/icons/cross.svg" alt="Delete" className="size-5 " /> */}
+                <X />
               </button>
             </div>
           ) : (
@@ -54,11 +56,11 @@ const FileUploader = ({ onFileChange }: FileUploaderProps) => {
                 <img src="/icons/info.svg" alt="Upload" className="size-20" />
               </div>
               <div>
-                <p className="text-lg text-gray-500">
+                <p className="text-lg text-gray-300">
                   <span className="font-semibold">Click to upload</span> or drag
                   'n drop
                 </p>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-300">
                   Supported formats: .pdf (max. 15MB)
                 </p>
               </div>
