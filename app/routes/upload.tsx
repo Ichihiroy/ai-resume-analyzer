@@ -6,6 +6,7 @@ import { usePuterStore } from "~/lib/puter";
 import { nanoid } from "nanoid";
 import { prepareInstructions } from "constans";
 import { AIResponseFormat } from "constans";
+import { useNavigate } from "react-router";
 
 export function meta() {
   return [
@@ -22,6 +23,7 @@ const Upload = () => {
   const [statusText, setStatusText] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const { kv, ai, fs } = usePuterStore();
+  const navigate = useNavigate();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -107,12 +109,14 @@ const Upload = () => {
         : feedback.message.content[0]?.text || "No feedback received.";
 
     data.feedback = JSON.parse(feedbackText);
-    await kv.set("resume" + data.id, JSON.stringify(data));
+    await kv.set("resume:" + data.id, JSON.stringify(data));
 
     setStatusText("Analysis complete! Redirecting...");
     setIsProcessing(false);
 
     console.log(data);
+
+    navigate(`/resume/${data.id}`);
   };
 
   return (
