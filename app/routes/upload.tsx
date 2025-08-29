@@ -1,7 +1,11 @@
 import { useState, type FormEvent } from "react";
+import { convertPdfToImage } from "utils/pdfToImg";
 import FileUploader from "~/components/FileUploader";
 import Navbar from "~/components/Navbar";
 import { usePuterStore } from "~/lib/puter";
+import { nanoid } from "nanoid";
+import { prepareInstructions } from "constans";
+import { AIResponseFormat } from "constans";
 
 export function meta() {
   return [
@@ -14,7 +18,7 @@ export function meta() {
 }
 
 const Upload = () => {
-  const [isProcessing, setIsProcessing] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [statusText, setStatusText] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const { kv, ai, fs } = usePuterStore();
@@ -28,21 +32,87 @@ const Upload = () => {
     const companyName = formData.get("company-name") as string;
     const jobTitle = formData.get("job-title") as string;
     const jobDescription = formData.get("job-description") as string;
+
+    handleAnalyze(companyName, jobTitle, jobDescription);
   };
 
   const handleFileChange = (file: File | null) => {
     setFile(file);
   };
 
-  const handleAnalyze = (
+  const handleAnalyze = async (
     companyName: string,
     jobTitle: string,
     jobDescription: string
   ) => {
     setIsProcessing(true);
-    setStatusText("Analyzing your resume...");
+    setStatusText("Uploading your resume...");
 
-    // const uploadedFile = fs.uploadFile(file!);
+    const uploadedFile = await fs.upload(file ? [file] : []);
+    if (!uploadedFile) {
+      setStatusText("Please select a resume file to upload.");
+      // setIsProcessing(false);
+      return;
+    }
+
+    setStatusText("Converting PDF to image...");
+    const imageFile = await convertPdfToImage(file as File);
+    if (!imageFile.file) {
+      setStatusText("Failed to convert PDF to image.");
+      // setIsProcessing(false);
+      return;
+    }
+
+    setStatusText("Uploading image...");
+    const uploadedImage = await fs.upload([imageFile.file]);
+    if (!uploadedImage) {
+      setStatusText("Failed to upload image.");
+      // setIsProcessing(false);
+      return;
+    }
+
+    setStatusText("Preparing data...");
+
+    const data = {
+      id: nanoid(),
+      companyName,
+      jobTitle,
+      jobDescription,
+      imagePath: uploadedImage.path,
+      resumePath: uploadedFile.path,
+      feedback: "",
+    };
+
+    await kv.set("resume" + data.id, JSON.stringify(data));
+    setStatusText("Analyzing resume...");
+
+    const feedback = await ai.feedback(
+      data.resumePath,
+      prepareInstructions({
+        jobTitle,
+        jobDescription,
+        AIResponseFormat,
+      })
+    );
+
+    if (!feedback) {
+      setStatusText("Failed to analyze resume.");
+      // setIsProcessing(false);
+      return;
+    }
+
+    const feedbackText =
+      typeof feedback.message.content === "string"
+        ? feedback.message.content
+        : feedback.message.content[0]?.text || "No feedback received.";
+
+    data.feedback = JSON.parse(feedbackText);
+    await kv.set("resume" + data.id, JSON.stringify(data));
+
+    setStatusText("Analysis complete! Redirecting...");
+    setIsProcessing(false);
+
+    console.log(data);
   };
 
   return (
@@ -109,7 +179,11 @@ const Upload = () => {
                 <label htmlFor="uploader">Upload Resume</label>
                 <FileUploader onFileChange={handleFileChange} />
               </div>
-              <button className="primary-button py-4" type="submit">
+              <button
+                onSubmit={handleSubmit}
+                className="primary-button py-4"
+                type="submit"
+              >
                 Save & Analyze Resume
               </button>
             </form>

@@ -8,4 +8,12 @@ export default defineConfig({
   server: {
     open: true,
   },
+  // Configure worker handling
+  worker: {
+    format: "es",
+  },
+  // Ensure proper handling of .mjs files
+  optimizeDeps: {
+    exclude: ["pdfjs-dist"],
+  },
 });
