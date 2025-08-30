@@ -4,7 +4,7 @@ import { usePuterStore } from "~/lib/puter";
 
 export function meta() {
   return [
-    { title: "Resumind | Auth" },
+    { title: "Resume Pulse | Auth" },
     {
       name: "description",
       content: "Authenticate to access your personalized resume analysis.",
@@ -25,7 +25,7 @@ const Auth = () => {
   }, [auth.isAuthenticated, next]);
 
   return (
-    <main className="bg-[url('/images/bg-auth.svg')] bg-cover min-h-screen flex flex-col items-center justify-center gap-8">
+    <main className="bg-[url('/images/bg-dark-auth.svg')] bg-cover min-h-screen flex flex-col items-center justify-center gap-8">
       <section className="text-center flex flex-col">
         {auth.isAuthenticated ? (
           <>

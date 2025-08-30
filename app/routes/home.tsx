@@ -7,7 +7,7 @@ import { useNavigate, Link } from "react-router";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "AI Resume Analyzer" },
+    { title: "Resume Pulse | AI Resume Analyzer" },
     {
       name: "description",
       content: "Analyze your resume with our AI-powered tool!",
@@ -96,8 +96,44 @@ export default function Home() {
           </div>
         ) : (
           <section className="w-full">
-            {/* Full Width Grid Layout */}
-            <div className="w-full px-4 lg:px-8">
+            {/* Mobile: Horizontal Scroll Carousel */}
+            <div className="block lg:hidden w-full">
+              <div className="overflow-x-auto scrollbar-hide px-4">
+                <div
+                  className="flex gap-4 pb-4"
+                  style={{ width: `${userResumes.length * 320}px` }}
+                >
+                  {userResumes.map((resume) => (
+                    <div key={resume.id} className="flex-shrink-0 w-[300px]">
+                      <ResumeCard resume={resume} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Mobile scroll indicator */}
+              <div className="flex justify-center mt-4 px-4">
+                <p className="text-white/60 text-sm flex items-center gap-2">
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                  Swipe to see more resumes
+                </p>
+              </div>
+            </div>
+
+            {/* Desktop: Grid Layout */}
+            <div className="hidden lg:block w-full px-4 lg:px-8">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 justify-items-center max-w-none">
                 {userResumes.map((resume) => (
                   <div key={resume.id} className="w-full max-w-[350px]">

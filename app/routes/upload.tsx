@@ -10,7 +10,7 @@ import { useNavigate } from "react-router";
 
 export function meta() {
   return [
-    { title: "Resumind | Upload your resume" },
+    { title: "Resume Pulse | Upload your resume" },
     {
       name: "description",
       content: "Upload your resume for analysis and improvement suggestions.",
@@ -88,18 +88,27 @@ const Upload = () => {
     await kv.set("resume" + data.id, JSON.stringify(data));
     setStatusText("Analyzing resume...");
 
-    const feedback = await ai.feedback(
-      data.resumePath,
-      prepareInstructions({
-        jobTitle,
-        jobDescription,
-        AIResponseFormat,
-      })
-    );
+    const feedback = await ai
+      .feedback(
+        data.resumePath,
+        prepareInstructions({
+          jobTitle,
+          jobDescription,
+          AIResponseFormat,
+        })
+      )
+      .catch((err) => {
+        setStatusText(
+          "⏱️ AI usage limit reached. Please try again in a few minutes or upgrade your Puter plan for more analysis credits."
+        );
+        console.error(err);
+        return;
+      });
 
     if (!feedback) {
-      setStatusText("Failed to analyze resume.");
-      // setIsProcessing(false);
+      setStatusText(
+        "⏱️ AI usage limit reached. Please try again in a few minutes or upgrade your Puter plan for more analysis credits."
+      );
       return;
     }
 

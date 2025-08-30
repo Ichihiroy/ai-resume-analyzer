@@ -15,9 +15,6 @@ const ResumeCard = ({ resume }: ResumeCardProps) => {
 
   useEffect(() => {
     const loadResumeImage = async () => {
-      console.log("Loading resume image for:", resume.id);
-      console.log("ImagePath:", resume.imagePath);
-
       if (!resume.imagePath) {
         console.log("No imagePath available");
         setImageLoading(false);
@@ -29,7 +26,6 @@ const ResumeCard = ({ resume }: ResumeCardProps) => {
         setImageLoading(true);
         setImageError(false);
 
-        // Read the image blob from Puter filesystem using the same method as resume route
         const imageBlob = await fs.read(resume.imagePath);
 
         if (!imageBlob) {
@@ -38,11 +34,7 @@ const ResumeCard = ({ resume }: ResumeCardProps) => {
           return;
         }
 
-        console.log("Image blob loaded, size:", imageBlob.size);
-
-        // Create object URL from the blob
         const imageUrl = URL.createObjectURL(new Blob([imageBlob]));
-        console.log("Image URL created:", imageUrl);
 
         setPreviewImage(imageUrl);
       } catch (error) {
@@ -55,7 +47,6 @@ const ResumeCard = ({ resume }: ResumeCardProps) => {
 
     loadResumeImage();
 
-    // Cleanup function to revoke object URL
     return () => {
       if (previewImage) {
         URL.revokeObjectURL(previewImage);
@@ -77,7 +68,6 @@ const ResumeCard = ({ resume }: ResumeCardProps) => {
     <div className="w-full max-w-sm">
       <Link to={`/resume/${resume.id}`} className="group block w-full h-full">
         <div className="bg-white/8 hover:bg-white/12 backdrop-blur-sm border border-white/5 hover:border-white/20 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-black/10 transform hover:-translate-y-1">
-          {/* Resume Preview */}
           <div className="relative aspect-[4/5] bg-gray-900/20 overflow-hidden">
             {imageLoading && (
               <div className="absolute inset-0 flex items-center justify-center bg-gray-100">

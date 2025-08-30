@@ -97,11 +97,46 @@ const Resume = () => {
               <Details feedback={feedback} />
             </div>
           ) : (
-            <img
-              src="/images/resume-scan-2.gif"
-              alt="Scanning..."
-              className="object-contain rounded-2xl w-full h-full"
-            />
+            // Full-screen loading overlay
+            <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center">
+              <div className="flex flex-col items-center justify-center">
+                {/* Custom Loading Animation */}
+                <div className="relative">
+                  {/* Outer rotating ring */}
+                  <div className="w-24 h-24 border-4 border-blue-200/30 border-t-blue-500 rounded-full animate-spin"></div>
+                  {/* Inner pulsing dot */}
+                  <div className="absolute top-1/2 left-1/2 w-10 h-10 -mt-5 -ml-5 bg-blue-500 rounded-full animate-pulse"></div>
+                </div>
+
+                {/* Loading text with typing effect */}
+                <div className="mt-10 text-center">
+                  <h3 className="text-2xl font-bold text-white mb-3">
+                    Analyzing Resume
+                  </h3>
+                  <div className="flex items-center justify-center space-x-2">
+                    <span className="text-gray-300 text-lg">Processing</span>
+                    <div className="flex space-x-1">
+                      <div
+                        className="w-3 h-3 bg-blue-500 rounded-full animate-bounce"
+                        style={{ animationDelay: "0ms" }}
+                      ></div>
+                      <div
+                        className="w-3 h-3 bg-blue-500 rounded-full animate-bounce"
+                        style={{ animationDelay: "150ms" }}
+                      ></div>
+                      <div
+                        className="w-3 h-3 bg-blue-500 rounded-full animate-bounce"
+                        style={{ animationDelay: "300ms" }}
+                      ></div>
+                    </div>
+                  </div>
+                  <p className="text-gray-400 mt-4 max-w-md text-center">
+                    Our AI is carefully analyzing your resume to provide
+                    detailed feedback and suggestions.
+                  </p>
+                </div>
+              </div>
+            </div>
           )}
         </section>
       </div>
